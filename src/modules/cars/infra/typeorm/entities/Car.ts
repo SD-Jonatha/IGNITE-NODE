@@ -31,9 +31,9 @@ class Car {
   category_id: string;
   @ManyToMany(()=> Specification)
   @JoinTable({
-    name: "Specifications_cars",
+    name: "specifications_cars",
     joinColumns: [{name: "car_id"}],
-    inverseJoinColumns: [{name: "Specification_id"}]
+    inverseJoinColumns: [{name: "specification_id"}]
   })
   specifications: Specification[];
   @CreateDateColumn()
