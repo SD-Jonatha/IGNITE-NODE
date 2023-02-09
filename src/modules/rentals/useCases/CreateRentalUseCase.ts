@@ -1,4 +1,5 @@
 import { AppError } from "@shared/errors/AppError";
+import { Rental } from "../infra/typeorm/entities/Rental";
 import { IRentalsRepository } from "../repositories/IRentalsRepository";
 
 interface IRequest {
@@ -15,7 +16,7 @@ class CreateRentalUseCase {
     user_id,
     car_id,
     expected_return_date,
-  }: IRequest): Promise<void>{
+  }: IRequest): Promise<Rental>{
 
     //Não deve ser possível cadastrar um novo aluguel
     const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(car_id)
@@ -29,6 +30,16 @@ class CreateRentalUseCase {
     if(rentalOpenToUser){
       throw new AppError("There's a rental in progress for user!")
     }
+
+    //O aluguel deve ter duração mínima de 24 horas
+
+   const rental =await this.rentalsRepository.create({
+      user_id,
+      car_id,
+      expected_return_date,
+    })
+
+    return rental
 
   }
 }
