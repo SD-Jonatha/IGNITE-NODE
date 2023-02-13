@@ -41,7 +41,7 @@ describe("List Cars", ()=> {
   const cars = await listAvailableCarsUseCase.execute({
     brand: "Car_brand"
   })
-  console.log(cars)
+  
 
   expect(cars).toEqual([car])
 });
@@ -60,7 +60,7 @@ it("should be able to list all available cars by name", async () => {
 const cars = await listAvailableCarsUseCase.execute({
   name: "Car 3"
 })
-console.log(cars)
+
 
 expect(cars).toEqual([car])
 });
@@ -80,7 +80,7 @@ it("should be able to list all available cars by category", async () => {
 const cars = await listAvailableCarsUseCase.execute({
   category_id: "12345"
 })
-console.log(cars)
+
 
 expect(cars).toEqual([car])
 });

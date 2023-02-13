@@ -31,7 +31,6 @@ class CreateCarSpecificationUseCase {
     const specifications = await this.specificationsRepository.findByIds(
       specifications_id
     )
-    console.log(specifications)
 
     carExists.specifications = specifications;
 
