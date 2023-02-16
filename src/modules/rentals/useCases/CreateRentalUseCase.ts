@@ -1,8 +1,12 @@
-import dayjs from "dayjs"
+
+
+import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { AppError } from "@shared/errors/AppError";
+
 import { Rental } from "../infra/typeorm/entities/Rental";
 import { IRentalsRepository } from "../repositories/IRentalsRepository";
+import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
+import { AppError } from "@shared/errors/AppError";
 
 dayjs.extend(utc)
 interface IRequest {
@@ -13,7 +17,14 @@ interface IRequest {
 
 
 class CreateRentalUseCase {
-  constructor(private rentalsRepository: IRentalsRepository){}
+  constructor(
+    private rentalsRepository: IRentalsRepository,
+    private dateProvider: IDateProvider
+    
+    
+    
+    
+    ){}
 
   async execute({
     user_id,
@@ -21,7 +32,7 @@ class CreateRentalUseCase {
     expected_return_date,
   }: IRequest): Promise<Rental>{
 
-    const minimumHour = 24
+    const minimumHour = 24;
 
     //Não deve ser possível cadastrar um novo aluguel
     const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(car_id)
@@ -35,12 +46,19 @@ class CreateRentalUseCase {
     if(rentalOpenToUser){
       throw new AppError("There's a rental in progress for user!")
     }
+    // const convertToUTC = dayjs().utc().local().format();
+    // const dateNow = dayjs().toDate()
+    // const end_date_utc = dayjs(expected_return_date).utc().local().format();
+    // const start_date_utc = dayjs(dateNow).utc().local().format();
+    // const compare =dayjs(end_date_utc).diff(start_date_utc, "hours")
+    const dateNow = this.dateProvider.dateNow();
 
-    //O aluguel deve ter duração mínima de 24 horas
-    const expectedReturnDateFormat = dayjs(expected_return_date).utc().local().format();
-    const dateNow = dayjs().utc().local().format()
+    const compare = this.dateProvider.compareInHours(
+      
+      dateNow,
+      expected_return_date,
+    )
 
-    const compare = dayjs(expectedReturnDateFormat).diff(dateNow, "hours")
     if(compare < minimumHour){
       throw new AppError("Invalid return time!")
     }
