@@ -11,9 +11,9 @@ export class CreateRentals1675433501561 implements MigrationInterface {
                     {name: "car_id", type: "uuid"},
                     {name: "user_id", type: "uuid"},
                     {name: "start_date", type: "timestamp", default: "now()",},
-                    {name: "end_date", type: "timestamp",},
+                    {name: "end_date", type: "timestamp", isNullable: true},
                     {name: "expected_return_date", type: "timestamp",},
-                    {name: "total", type: "numeric",},
+                    {name: "total", type: "numeric", isNullable: true},
                     {name: "created_at", type: "timestamp", default: "now()",},
                     {name: "updated_at", type: "timestamp", default: "now()",},
                 ],
@@ -42,6 +42,7 @@ export class CreateRentals1675433501561 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable("rentals")
     }
 
 }

@@ -3,22 +3,25 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
-import { Rental } from "../infra/typeorm/entities/Rental";
-import { IRentalsRepository } from "../repositories/IRentalsRepository";
+import { Rental } from "../../infra/typeorm/entities/Rental";
+import { IRentalsRepository } from "../../repositories/IRentalsRepository";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
 import { AppError } from "@shared/errors/AppError";
+import { inject, injectable } from "tsyringe";
 
-dayjs.extend(utc)
+
 interface IRequest {
   user_id: string;
   car_id: string;
   expected_return_date: Date;
 }
 
-
+@injectable()
 class CreateRentalUseCase {
   constructor(
+    @inject("RentalsRepository")
     private rentalsRepository: IRentalsRepository,
+    @inject("DayjsDateProvider")
     private dateProvider: IDateProvider
     
     
@@ -46,11 +49,7 @@ class CreateRentalUseCase {
     if(rentalOpenToUser){
       throw new AppError("There's a rental in progress for user!")
     }
-    // const convertToUTC = dayjs().utc().local().format();
-    // const dateNow = dayjs().toDate()
-    // const end_date_utc = dayjs(expected_return_date).utc().local().format();
-    // const start_date_utc = dayjs(dateNow).utc().local().format();
-    // const compare =dayjs(end_date_utc).diff(start_date_utc, "hours")
+   
     const dateNow = this.dateProvider.dateNow();
 
     const compare = this.dateProvider.compareInHours(
