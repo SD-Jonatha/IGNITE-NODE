@@ -31,7 +31,7 @@ describe("Create Category Controller", () => {
     email: "admin@rentx.com.br",
     password: "admin",
   });
-  console.log(responseToken.body)
+ 
 
   const {token} = responseToken.body
 
@@ -42,7 +42,7 @@ describe("Create Category Controller", () => {
     Authorization: `Bearer ${token}`
   })
   const response = await request(app).get("/categories");
-  console.log(response.body);
+  
   expect(response.status).toBe(200);
   
   // expect(response.body.length).toBe(1)
